@@ -7,21 +7,20 @@ import os
 st.set_page_config(page_title="✈️ Flight Dashboard", layout="wide")
 
 # Function to load data from local Excel file
-@st.cache_data
-def load_data():
-    # Update this path to your local Excel file location
-    file_path = r"C:\Guzogo\Excel-newoct\merged_file_fixed.xlsx"  
-    
-    if os.path.exists(file_path):
-        df = pd.read_excel(file_path)
-        return df
-    else:
-        st.error(f"❌ File not found at: {file_path}")
-        st.info("Please update the file_path variable in the code to point to your Excel file")
-        return None
+# Direct download URL from Google Drive
+file_url = "https://drive.google.com/uc?id=1yZOgxaEroxK6_qmzwiTDwT4aDPlA5RB6"
 
-# Load data
-df = load_data()
+@st.cache_data
+def load_data(url):
+    try:
+        df = pd.read_excel(url, engine="openpyxl")
+        return df
+    except Exception as e:
+        st.error(f"❌ Failed to load Excel file: {e}")
+        return None
+    
+# Load data from Google Drive
+df = load_data(file_url)
 
 if df is not None:
     # Clean and convert date
